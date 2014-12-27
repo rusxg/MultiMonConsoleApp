@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\src\baseclasses\amextra.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\amfilter.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\amvideo.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\arithutil.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\combase.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\cprop.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\ctlutil.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\ddmm.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\dllentry.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\dllsetup.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\mtype.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\outputq.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\perflog.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\pstream.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\pullpin.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\refclock.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\renbase.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\schedule.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\seekpt.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\source.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\strmctl.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\sysclock.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\transfrm.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\transip.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\videoctl.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\vtrans.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\winctrl.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\winutil.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\wxdebug.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\wxlist.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\baseclasses\wxutil.cpp">
+      <Filter>baseclasses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="baseclasses">
+      <UniqueIdentifier>{c64e63ce-588e-4d87-8298-efe56ca76205}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\baseclasses\amextra.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\amfilter.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\cache.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\checkbmi.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\combase.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\cprop.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\ctlutil.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\ddmm.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\dllsetup.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\dxmperf.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\fourcc.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\measure.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\msgthrd.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\mtype.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\outputq.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\perflog.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\perfstruct.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\pstream.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\pullpin.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\refclock.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\reftime.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\renbase.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\schedule.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\seekpt.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\source.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\streams.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\strmctl.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\sysclock.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\transfrm.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\transip.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\videoctl.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\vtrans.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\winctrl.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\winutil.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\wxdebug.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\wxlist.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\baseclasses\wxutil.h">
+      <Filter>baseclasses</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
