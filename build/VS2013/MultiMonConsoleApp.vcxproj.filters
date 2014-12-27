@@ -95,6 +95,7 @@
       <Filter>baseclasses</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="baseclasses">
@@ -213,5 +214,6 @@
     <ClInclude Include="..\..\src\baseclasses\wxutil.h">
       <Filter>baseclasses</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\controller.h" />
   </ItemGroup>
 </Project>

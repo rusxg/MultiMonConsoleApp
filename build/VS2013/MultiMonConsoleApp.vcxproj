@@ -90,6 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\controller.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\baseclasses\amextra.cpp" />
     <ClCompile Include="..\..\src\baseclasses\amfilter.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="..\..\src\baseclasses\wxdebug.h" />
     <ClInclude Include="..\..\src\baseclasses\wxlist.h" />
     <ClInclude Include="..\..\src\baseclasses\wxutil.h" />
+    <ClInclude Include="..\..\src\controller.h" />
     <ClInclude Include="..\..\src\filter.h" />
     <ClInclude Include="..\..\src\generator.h" />
   </ItemGroup>

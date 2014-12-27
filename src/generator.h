@@ -1,5 +1,7 @@
 #pragma once
 
+#include "streams.h"
+
 class PictureGenerator
 {
 public:
