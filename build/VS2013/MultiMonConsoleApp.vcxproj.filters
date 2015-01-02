@@ -96,6 +96,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\controller.cpp" />
+    <ClCompile Include="..\..\src\filter.cpp" />
+    <ClCompile Include="..\..\src\generator.cpp" />
+    <ClCompile Include="..\..\src\canvas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="baseclasses">
@@ -215,5 +218,9 @@
       <Filter>baseclasses</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\controller.h" />
+    <ClInclude Include="..\..\src\filter.h" />
+    <ClInclude Include="..\..\src\generator.h" />
+    <ClInclude Include="..\..\src\common.h" />
+    <ClInclude Include="..\..\src\canvas.h" />
   </ItemGroup>
 </Project>

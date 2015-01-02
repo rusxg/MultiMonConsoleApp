@@ -73,7 +73,7 @@
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
@@ -90,6 +90,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\canvas.cpp" />
     <ClCompile Include="..\..\src\controller.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\baseclasses\amextra.cpp" />
@@ -164,9 +165,11 @@
     <ClInclude Include="..\..\src\baseclasses\wxdebug.h" />
     <ClInclude Include="..\..\src\baseclasses\wxlist.h" />
     <ClInclude Include="..\..\src\baseclasses\wxutil.h" />
+    <ClInclude Include="..\..\src\canvas.h" />
     <ClInclude Include="..\..\src\controller.h" />
     <ClInclude Include="..\..\src\filter.h" />
     <ClInclude Include="..\..\src\generator.h" />
+    <ClInclude Include="..\..\src\common.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
