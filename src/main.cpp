@@ -1,38 +1,25 @@
 #include <stdio.h>
 #include <conio.h>
+#include <windows.h>
 
-#include "common.h"
-
-#include "controller.h"
-#include "canvas.h"
-
-struct CanvasInputCallback
-    : public ICanvasInputCallback
-{
-    bool aborted;
-    CanvasInputCallback() : aborted(false) {}
-    void OnKeyDown(DWORD dwKeyCode, DWORD dwKeyFlags)
-    {
-        if (dwKeyCode == VK_ESCAPE)
-            aborted = true;
-    }
-};
+#include "MultiMonRenderer.h"
 
 int main(void)
 {
-    Controller controller;
-    if (!controller.Initialize())
+    MMR_HANDLE handle = MMR_Initialize();
+    if (!handle)
     {
-        printf("Can't initialize DirectShow controller\n");
+        printf("Can't initialize MultiMonRenderer instance\n");
         return -1;
     }
 
     printf("Available monitors:\n\n");
-    int nMonitorCount = controller.GetMonitorCount();
+    int nMonitorCount = 0;
+    char **ppMonitorNames = NULL;
+    MMR_GetCards(handle, &ppMonitorNames, &nMonitorCount);
     for (int i = 0; i < nMonitorCount; i++)
     {
-        std::wstring sMonitorName = controller.GetMonitorName(i);
-        printf("%d. %ws\n", i + 1, sMonitorName.c_str());
+        printf("%d. %s\n", i + 1, ppMonitorNames[i]);
     }
 
     int nMonitorIndex = 0;
@@ -56,36 +43,20 @@ int main(void)
         printf("Incorrect value\n");
     }
 
-    Canvas canvas;
-    canvas.Initialize();
-    controller.SetCanvas(&canvas);
-    controller.SetMonitorIndex(nMonitorIndex);
-
-    CanvasInputCallback canvasInputCallback;
-    canvas.SetInputCallback(&canvasInputCallback);
-
-    if (!controller.Start())
-    {
-        printf("Can't initialize DirectShow controller\n");
-        return -1;
-    }
-
     printf("Press ESC to exit\n");
+
+    MMR_Start(handle, nMonitorIndex, 320, 240);
 
     // Main message loop:
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0))
     {
-        if (canvasInputCallback.aborted)
-            break;
-
         if (_kbhit() && _getch() == VK_ESCAPE)
             break;
 
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-
     return 0;
 }
 

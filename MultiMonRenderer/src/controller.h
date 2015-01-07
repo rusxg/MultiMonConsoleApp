@@ -27,8 +27,8 @@ public:
     // IController
     bool SetCanvas(ICanvas *pCanvas);
     int GetMonitorCount();
-    std::wstring GetMonitorName( int nMonitorIndex );
-    bool SetMonitorIndex( int nMonitorIndex );
+    void GetMonitorName(int nMonitorIndex, char *cNameBuf, int nNameBufSize);
+    bool SetMonitorIndex(int nMonitorIndex);
 
     // ICanvasPaintCallback
     void OnDisplayChange();
@@ -44,7 +44,9 @@ protected:
     IBaseFilterPtr m_pRenderer;
     IVMRWindowlessControl9Ptr m_pWindowlessControl;
     int m_nMonitorIndex;
+    bool m_bCoInitialized;
 
-    std::vector<VMR9MonitorInfo> m_vMonitorInfo;
+    VMR9MonitorInfo *m_aMonitorInfo;
+    int m_nMonitorCount;
     ICanvas *m_pCanvas;
 };

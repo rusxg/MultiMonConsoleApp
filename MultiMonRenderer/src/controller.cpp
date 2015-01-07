@@ -4,9 +4,14 @@
 
 bool Controller::Initialize()
 {
+    m_bCoInitialized = true;
     HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
     if (FAILED(hr))
-        return false;
+    {
+        m_bCoInitialized = false;
+        if (hr == RPC_E_CHANGED_MODE)
+            return false;
+    }
 
     hr = CreateRenderer();
     if (FAILED(hr))
@@ -77,7 +82,8 @@ void Controller::Uninitialize()
 {
     m_pGraph = NULL;
     m_pControl = NULL;
-    CoUninitialize();
+    if (m_bCoInitialized)
+        CoUninitialize();
 }
 
 bool Controller::Start()
@@ -110,18 +116,17 @@ bool Controller::Start()
 
 int Controller::GetMonitorCount()
 {
-    return m_vMonitorInfo.size();
+    return m_nMonitorCount;
 }
 
-std::wstring Controller::GetMonitorName(int nMonitorIndex )
+void Controller::GetMonitorName(int nMonitorIndex, char *cNameBuf, int nNameBufSize )
 {
-    if (nMonitorIndex < 0 || (unsigned int)nMonitorIndex >= m_vMonitorInfo.size())
-        return L"";
+    *cNameBuf = '\0';
+    if (nMonitorIndex < 0 || nMonitorIndex >= m_nMonitorCount)
+        return;
 
-    std::wstringstream stream;
-    const VMR9MonitorInfo& info = m_vMonitorInfo[nMonitorIndex];
-    stream << info.szDevice << " [ " << info.szDescription << " ]";
-    return stream.str();
+    const VMR9MonitorInfo& info = m_aMonitorInfo[nMonitorIndex];
+    sprintf_s(cNameBuf, nNameBufSize, "%ws [ %ws ]", info.szDevice, info.szDescription);
 }
 
 HRESULT Controller::CreateRenderer()
@@ -151,14 +156,22 @@ HRESULT Controller::CreateRenderer()
         return hr;
     }
 
-    m_vMonitorInfo.resize(dwMonitorCount);
+    assert(!m_aMonitorInfo);
+    m_aMonitorInfo = (VMR9MonitorInfo *)malloc(dwMonitorCount* sizeof(VMR9MonitorInfo));
+    if (!m_aMonitorInfo)
+    {
+        printf("Can't allocate buffer for monitor info\n");
+        return E_OUTOFMEMORY;
+    }
+
     DWORD dwMonitorInfoWritten = 0;
-    hr = pMonitorConfig->GetAvailableMonitors(&m_vMonitorInfo[0], dwMonitorCount, &dwMonitorInfoWritten);
+    hr = pMonitorConfig->GetAvailableMonitors(&m_aMonitorInfo[0], dwMonitorCount, &dwMonitorInfoWritten);
     if (FAILED(hr))
     {
         printf("Can't get available monitors info\n");
         return hr;
     }
+    m_nMonitorCount = dwMonitorInfoWritten;
 
     IVMRFilterConfig9Ptr pFilterConfig;
     hr = m_pRenderer->QueryInterface(IID_IVMRFilterConfig9, (void **)&pFilterConfig);
@@ -179,25 +192,25 @@ HRESULT Controller::CreateRenderer()
 Controller::Controller()
 : m_pCanvas(NULL)
 , m_nMonitorIndex(0)
+, m_bCoInitialized(false)
+, m_nMonitorCount(0)
+, m_aMonitorInfo(NULL)
 {
 }
 
 HRESULT Controller::SetupRenderer()
 {
-    HRESULT hr;
-
-    const RECT& rcMonitor = m_vMonitorInfo[m_nMonitorIndex].rcMonitor;
+    const RECT& rcMonitor = m_aMonitorInfo[m_nMonitorIndex].rcMonitor;
     m_pCanvas->SetPosition(rcMonitor);
 
     HWND hwndCanvas = m_pCanvas->GetHWND();
-    RECT rcPosition;
-    if (!GetWindowRect(hwndCanvas, &rcPosition))
+    RECT rcClientPosition;
+    if (!GetClientRect(hwndCanvas, &rcClientPosition))
         return E_FAIL;
-    m_pWindowlessControl->SetVideoClippingWindow(hwndCanvas);
-    RECT rcClientPosition = {};
-    rcClientPosition.right = rcMonitor.right - rcMonitor.left;
-    rcClientPosition.bottom = rcMonitor.bottom - rcMonitor.top;
-    m_pWindowlessControl->SetVideoPosition(NULL, &rcClientPosition);
+    HRESULT hr = m_pWindowlessControl->SetVideoClippingWindow(hwndCanvas);
+    assert(SUCCEEDED(hr));
+    hr = m_pWindowlessControl->SetVideoPosition(NULL, &rcClientPosition);
+    assert(SUCCEEDED(hr));
 
     return S_OK;
 }
@@ -230,7 +243,7 @@ void Controller::OnPaint( HDC hdc )
 
 bool Controller::SetMonitorIndex( int nMonitorIndex )
 {
-    if (nMonitorIndex < 0 || (unsigned int)nMonitorIndex >= m_vMonitorInfo.size())
+    if (nMonitorIndex < 0 || nMonitorIndex >= m_nMonitorCount)
         return false;
 
     m_nMonitorIndex = nMonitorIndex;

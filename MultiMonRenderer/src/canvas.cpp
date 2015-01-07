@@ -27,7 +27,7 @@ bool Canvas::Initialize()
 
     RegisterClassExW(&wcx);
 
-    m_hwnd = CreateWindowW(wcx.lpszClassName, L"CanvasWindow2", WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, 
+    m_hwnd = CreateWindowW(wcx.lpszClassName, L"CanvasWindow", WS_POPUP | WS_EX_TOPMOST, CW_USEDEFAULT, CW_USEDEFAULT,
         CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, NULL, 
         (void *)this);
 
@@ -49,41 +49,6 @@ LRESULT CALLBACK Canvas::stWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARA
 
     // get the pointer to the window
     pWnd = GetObjectFromWindow(hwnd);
-    
-#ifdef _DEBUG
-    if (uMsg != WM_PAINT)
-    {
-        std::stringstream ss;
-        ss << "Window proc message " << std::hex << uMsg << " [ ";
-#define MESSAGE_CASE_ENTRY(x) case x: ss << #x; break;
-        switch (uMsg)
-        {
-            MESSAGE_CASE_ENTRY(WM_SETFONT);
-            MESSAGE_CASE_ENTRY(WM_INITDIALOG);
-            MESSAGE_CASE_ENTRY(WM_GETDLGCODE);
-            MESSAGE_CASE_ENTRY(WM_WINDOWPOSCHANGING);
-            MESSAGE_CASE_ENTRY(WM_ACTIVATEAPP);
-            MESSAGE_CASE_ENTRY(WM_NCACTIVATE);
-            MESSAGE_CASE_ENTRY(WM_ACTIVATE);
-            MESSAGE_CASE_ENTRY(WM_IME_SETCONTEXT);
-            MESSAGE_CASE_ENTRY(WM_IME_NOTIFY);
-            MESSAGE_CASE_ENTRY(WM_SETFOCUS);
-            MESSAGE_CASE_ENTRY(WM_CHANGEUISTATE);
-            MESSAGE_CASE_ENTRY(WM_WINDOWPOSCHANGED);
-            MESSAGE_CASE_ENTRY(WM_MOVE);
-            MESSAGE_CASE_ENTRY(WM_SIZE);
-            MESSAGE_CASE_ENTRY(WM_SHOWWINDOW);
-            MESSAGE_CASE_ENTRY(WM_NCPAINT);
-            MESSAGE_CASE_ENTRY(WM_GETICON);
-            MESSAGE_CASE_ENTRY(WM_ERASEBKGND);
-            MESSAGE_CASE_ENTRY(WM_NCCALCSIZE);
-            MESSAGE_CASE_ENTRY(WM_KILLFOCUS);
-            MESSAGE_CASE_ENTRY(WM_CTLCOLORDLG);
-        }
-        ss << " ] window found: " << pWnd << std::endl;
-        OutputDebugStringA(ss.str().c_str());
-    }
-#endif
 
     // if we have the pointer, go to the message handler of the window
     // else, use DefWindowProc

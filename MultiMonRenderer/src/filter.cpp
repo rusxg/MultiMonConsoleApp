@@ -48,47 +48,6 @@ CFactoryTemplate g_Templates[] = {
 int g_cTemplates = sizeof(g_Templates) / sizeof(g_Templates[0]);
 
 
-////////////////////////////////////////////////////////////////////////
-//
-// Exported entry points for registration and unregistration 
-// (in this case they only call through to default implementations).
-//
-////////////////////////////////////////////////////////////////////////
-
-//
-// DllRegisterServer
-//
-// Exported entry points for registration and unregistration
-//
-STDAPI DllRegisterServer()
-{
-    return AMovieDllRegisterServer2(TRUE);
-
-} // DllRegisterServer
-
-
-//
-// DllUnregisterServer
-//
-STDAPI DllUnregisterServer()
-{
-    return AMovieDllRegisterServer2(FALSE);
-
-} // DllUnregisterServer
-
-
-//
-// DllEntryPoint
-//
-extern "C" BOOL WINAPI DllEntryPoint(HINSTANCE, ULONG, LPVOID);
-
-BOOL APIENTRY DllMain(HANDLE hModule, 
-                      DWORD  dwReason, 
-                      LPVOID lpReserved)
-{
-	return DllEntryPoint((HINSTANCE)(hModule), dwReason, lpReserved);
-}
-
 //
 // CreateInstance
 //

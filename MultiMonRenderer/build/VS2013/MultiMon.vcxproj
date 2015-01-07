@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{45283913-B43E-4293-B9DA-5260F77131CE}</ProjectGuid>
+    <RootNamespace>MultiMon</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>MultiMonRenderer</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>12.0.21005.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(ProjectDir)\..\..\bin\</OutDir>
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)\..\..\bin\</OutDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>MMR_EXPORTS;WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\src\BaseClasses\;..\..\include\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Strmiids.lib;Quartz.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>MMR_EXPORTS;WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\src\BaseClasses\;..\..\include\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>Strmiids.lib;Quartz.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\canvas.cpp" />
+    <ClCompile Include="..\..\src\controller.cpp" />
+    <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\amextra.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\amfilter.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\amvideo.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\arithutil.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\combase.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\cprop.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\ctlutil.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\ddmm.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\dllentry.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\dllsetup.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\mtype.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\outputq.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\perflog.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\pstream.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\pullpin.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\refclock.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\renbase.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\schedule.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\seekpt.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\source.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\strmctl.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\sysclock.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\transfrm.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\transip.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\videoctl.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\vtrans.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\winctrl.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\winutil.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\wxdebug.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\wxlist.cpp" />
+    <ClCompile Include="..\..\src\baseclasses\wxutil.cpp" />
+    <ClCompile Include="..\..\src\filter.cpp" />
+    <ClCompile Include="..\..\src\generator.cpp" />
+    <ClCompile Include="..\..\src\MultiMonRenderer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\MultiMonRenderer.h" />
+    <ClInclude Include="..\..\src\baseclasses\amextra.h" />
+    <ClInclude Include="..\..\src\baseclasses\amfilter.h" />
+    <ClInclude Include="..\..\src\baseclasses\cache.h" />
+    <ClInclude Include="..\..\src\baseclasses\checkbmi.h" />
+    <ClInclude Include="..\..\src\baseclasses\combase.h" />
+    <ClInclude Include="..\..\src\baseclasses\cprop.h" />
+    <ClInclude Include="..\..\src\baseclasses\ctlutil.h" />
+    <ClInclude Include="..\..\src\baseclasses\ddmm.h" />
+    <ClInclude Include="..\..\src\baseclasses\dllsetup.h" />
+    <ClInclude Include="..\..\src\baseclasses\dxmperf.h" />
+    <ClInclude Include="..\..\src\baseclasses\fourcc.h" />
+    <ClInclude Include="..\..\src\baseclasses\measure.h" />
+    <ClInclude Include="..\..\src\baseclasses\msgthrd.h" />
+    <ClInclude Include="..\..\src\baseclasses\mtype.h" />
+    <ClInclude Include="..\..\src\baseclasses\outputq.h" />
+    <ClInclude Include="..\..\src\baseclasses\perflog.h" />
+    <ClInclude Include="..\..\src\baseclasses\perfstruct.h" />
+    <ClInclude Include="..\..\src\baseclasses\pstream.h" />
+    <ClInclude Include="..\..\src\baseclasses\pullpin.h" />
+    <ClInclude Include="..\..\src\baseclasses\refclock.h" />
+    <ClInclude Include="..\..\src\baseclasses\reftime.h" />
+    <ClInclude Include="..\..\src\baseclasses\renbase.h" />
+    <ClInclude Include="..\..\src\baseclasses\schedule.h" />
+    <ClInclude Include="..\..\src\baseclasses\seekpt.h" />
+    <ClInclude Include="..\..\src\baseclasses\source.h" />
+    <ClInclude Include="..\..\src\baseclasses\streams.h" />
+    <ClInclude Include="..\..\src\baseclasses\strmctl.h" />
+    <ClInclude Include="..\..\src\baseclasses\sysclock.h" />
+    <ClInclude Include="..\..\src\baseclasses\transfrm.h" />
+    <ClInclude Include="..\..\src\baseclasses\transip.h" />
+    <ClInclude Include="..\..\src\baseclasses\videoctl.h" />
+    <ClInclude Include="..\..\src\baseclasses\vtrans.h" />
+    <ClInclude Include="..\..\src\baseclasses\winctrl.h" />
+    <ClInclude Include="..\..\src\baseclasses\winutil.h" />
+    <ClInclude Include="..\..\src\baseclasses\wxdebug.h" />
+    <ClInclude Include="..\..\src\baseclasses\wxlist.h" />
+    <ClInclude Include="..\..\src\baseclasses\wxutil.h" />
+    <ClInclude Include="..\..\src\canvas.h" />
+    <ClInclude Include="..\..\src\controller.h" />
+    <ClInclude Include="..\..\src\filter.h" />
+    <ClInclude Include="..\..\src\generator.h" />
+    <ClInclude Include="..\..\src\common.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

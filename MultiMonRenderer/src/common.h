@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Windows.h"
-#include <string>
-#include <sstream>
 #include <assert.h>
 
 class ICanvasPaintCallback
@@ -32,7 +30,7 @@ class IController
 public:
     virtual bool SetCanvas(ICanvas *pCanvas) = 0;
     virtual int GetMonitorCount() = 0;
-    virtual std::wstring GetMonitorName( int nMonitorIndex ) = 0;
-    virtual bool SetMonitorIndex( int nMonitorIndex ) = 0;
+    virtual void GetMonitorName(int nMonitorIndex, char *cNameBuf, int nNameBufSize) = 0;
+    virtual bool SetMonitorIndex(int nMonitorIndex) = 0;
 };
 

@@ -58,15 +58,36 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\src\BaseClasses\</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\MultiMonRenderer\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Strmiids.lib;Quartz.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\MultiMonRenderer\bin\MultiMonRendererd.lib;Strmiids.lib;Quartz.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>
+      </Message>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>copy  ..\..\MultiMonRenderer\bin\MultiMonRendererd.dll $(OutputPath)\MultiMonRendererd.dll
+copy  ..\..\MultiMonRenderer\bin\MultiMonRendererd.pdb $(OutputPath)\MultiMonRendererd.pdb</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying MultiMonRenderer DLL to output folder</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(OutputPath)\MultiMonRendererd.dll;$(OutputPath)\MultiMonRendererd.pdb</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>..\..\MultiMonRenderer\bin\MultiMonRendererd.dll;..\..\MultiMonRenderer\bin\MultiMonRendererd.pdb</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -78,7 +99,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\..\src\BaseClasses\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\MultiMonRenderer\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -86,90 +107,23 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>Strmiids.lib;Quartz.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>..\..\MultiMonRenderer\bin\MultiMonRenderer.lib;Strmiids.lib;Quartz.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>copy ..\..\MultiMonRenderer\bin\MultiMonRenderer.dll  $(OutputPath)</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Copying MultiMonRenderer DLL to output folder</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\canvas.cpp" />
-    <ClCompile Include="..\..\src\controller.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\amextra.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\amfilter.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\amvideo.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\arithutil.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\combase.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\cprop.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\ctlutil.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\ddmm.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\dllentry.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\dllsetup.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\mtype.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\outputq.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\perflog.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\pstream.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\pullpin.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\refclock.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\renbase.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\schedule.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\seekpt.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\source.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\strmctl.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\sysclock.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\transfrm.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\transip.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\videoctl.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\vtrans.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\winctrl.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\winutil.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\wxdebug.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\wxlist.cpp" />
-    <ClCompile Include="..\..\src\baseclasses\wxutil.cpp" />
-    <ClCompile Include="..\..\src\filter.cpp" />
-    <ClCompile Include="..\..\src\generator.cpp" />
+    <ClCompile Include="..\..\src\generator.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\baseclasses\amextra.h" />
-    <ClInclude Include="..\..\src\baseclasses\amfilter.h" />
-    <ClInclude Include="..\..\src\baseclasses\cache.h" />
-    <ClInclude Include="..\..\src\baseclasses\checkbmi.h" />
-    <ClInclude Include="..\..\src\baseclasses\combase.h" />
-    <ClInclude Include="..\..\src\baseclasses\cprop.h" />
-    <ClInclude Include="..\..\src\baseclasses\ctlutil.h" />
-    <ClInclude Include="..\..\src\baseclasses\ddmm.h" />
-    <ClInclude Include="..\..\src\baseclasses\dllsetup.h" />
-    <ClInclude Include="..\..\src\baseclasses\dxmperf.h" />
-    <ClInclude Include="..\..\src\baseclasses\fourcc.h" />
-    <ClInclude Include="..\..\src\baseclasses\measure.h" />
-    <ClInclude Include="..\..\src\baseclasses\msgthrd.h" />
-    <ClInclude Include="..\..\src\baseclasses\mtype.h" />
-    <ClInclude Include="..\..\src\baseclasses\outputq.h" />
-    <ClInclude Include="..\..\src\baseclasses\perflog.h" />
-    <ClInclude Include="..\..\src\baseclasses\perfstruct.h" />
-    <ClInclude Include="..\..\src\baseclasses\pstream.h" />
-    <ClInclude Include="..\..\src\baseclasses\pullpin.h" />
-    <ClInclude Include="..\..\src\baseclasses\refclock.h" />
-    <ClInclude Include="..\..\src\baseclasses\reftime.h" />
-    <ClInclude Include="..\..\src\baseclasses\renbase.h" />
-    <ClInclude Include="..\..\src\baseclasses\schedule.h" />
-    <ClInclude Include="..\..\src\baseclasses\seekpt.h" />
-    <ClInclude Include="..\..\src\baseclasses\source.h" />
-    <ClInclude Include="..\..\src\baseclasses\streams.h" />
-    <ClInclude Include="..\..\src\baseclasses\strmctl.h" />
-    <ClInclude Include="..\..\src\baseclasses\sysclock.h" />
-    <ClInclude Include="..\..\src\baseclasses\transfrm.h" />
-    <ClInclude Include="..\..\src\baseclasses\transip.h" />
-    <ClInclude Include="..\..\src\baseclasses\videoctl.h" />
-    <ClInclude Include="..\..\src\baseclasses\vtrans.h" />
-    <ClInclude Include="..\..\src\baseclasses\winctrl.h" />
-    <ClInclude Include="..\..\src\baseclasses\winutil.h" />
-    <ClInclude Include="..\..\src\baseclasses\wxdebug.h" />
-    <ClInclude Include="..\..\src\baseclasses\wxlist.h" />
-    <ClInclude Include="..\..\src\baseclasses\wxutil.h" />
-    <ClInclude Include="..\..\src\canvas.h" />
-    <ClInclude Include="..\..\src\controller.h" />
-    <ClInclude Include="..\..\src\filter.h" />
     <ClInclude Include="..\..\src\generator.h" />
-    <ClInclude Include="..\..\src\common.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
