@@ -10,6 +10,7 @@
 _COM_SMARTPTR_TYPEDEF(IPin, __uuidof(IPin));
 _COM_SMARTPTR_TYPEDEF(IBaseFilter, __uuidof(IBaseFilter));
 _COM_SMARTPTR_TYPEDEF(IGraphBuilder, __uuidof(IGraphBuilder));
+_COM_SMARTPTR_TYPEDEF(IFilterGraph2, __uuidof(IFilterGraph2));
 _COM_SMARTPTR_TYPEDEF(IMediaControl, __uuidof(IMediaControl));
 _COM_SMARTPTR_TYPEDEF(IVMRMonitorConfig9, __uuidof(IVMRMonitorConfig9));
 _COM_SMARTPTR_TYPEDEF(IVMRFilterConfig9, __uuidof(IVMRFilterConfig9));
@@ -39,7 +40,7 @@ protected:
     HRESULT CreateGraphObjects();
     HRESULT CreateRenderer();
     HRESULT SetupRenderer();
-    IGraphBuilderPtr m_pGraph;
+    IFilterGraph2Ptr m_pGraph;
     IMediaControlPtr m_pControl;
     IBaseFilterPtr m_pRenderer;
     IVMRWindowlessControl9Ptr m_pWindowlessControl;

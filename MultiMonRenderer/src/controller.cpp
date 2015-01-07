@@ -27,7 +27,7 @@ HRESULT Controller::CreateGraphObjects()
 {
     HRESULT hr;
 
-    hr = CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void **)&m_pGraph);
+    hr = CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER, IID_IFilterGraph2, (void **)&m_pGraph);
     if (FAILED(hr))
         return hr;
 
@@ -68,7 +68,7 @@ HRESULT Controller::CreateGraphObjects()
         return false;
     }
 
-    hr = m_pGraph->Render(pPin);
+    hr = m_pGraph->RenderEx(pPin, AM_RENDEREX_RENDERTOEXISTINGRENDERERS, NULL);
     if (FAILED(hr))
     {
         printf("Can't render the graph\n");
@@ -178,7 +178,7 @@ HRESULT Controller::CreateRenderer()
     if (FAILED(hr))
         return hr;
 
-    hr = pFilterConfig->SetRenderingMode(VMRMode_Windowless);
+    hr = pFilterConfig->SetRenderingMode(VMR9Mode_Windowless);
     if (FAILED(hr))
         return hr;
 
@@ -202,15 +202,16 @@ HRESULT Controller::SetupRenderer()
 {
     const RECT& rcMonitor = m_aMonitorInfo[m_nMonitorIndex].rcMonitor;
     m_pCanvas->SetPosition(rcMonitor);
-
     HWND hwndCanvas = m_pCanvas->GetHWND();
     RECT rcClientPosition;
     if (!GetClientRect(hwndCanvas, &rcClientPosition))
         return E_FAIL;
     HRESULT hr = m_pWindowlessControl->SetVideoClippingWindow(hwndCanvas);
-    assert(SUCCEEDED(hr));
+    if (FAILED(hr))
+        return hr;
     hr = m_pWindowlessControl->SetVideoPosition(NULL, &rcClientPosition);
-    assert(SUCCEEDED(hr));
+    if (FAILED(hr))
+        return hr;
 
     return S_OK;
 }

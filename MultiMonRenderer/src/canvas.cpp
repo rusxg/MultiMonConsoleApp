@@ -62,6 +62,9 @@ LRESULT CALLBACK Canvas::WindowProc( HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM
 {
     switch ( uMsg )
     {
+    case WM_ERASEBKGND:
+        return TRUE;
+
     case WM_DISPLAYCHANGE:
         if (m_pEventCallback)
         {
