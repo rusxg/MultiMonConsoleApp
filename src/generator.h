@@ -1,7 +1,5 @@
 #pragma once
 
-#include "streams.h"
-
 class PictureGenerator
 {
 public:
@@ -12,10 +10,10 @@ public:
     // Use BallPixel[] as pixel value for the ball.
     // Plots zero in all 'background' image locations.
     // iPixelSize - the number of bytes in a pixel (size of BallPixel[])
-    void PlotBall(BYTE pFrame[], BYTE BallPixel[], int iPixelSize);
+    void PlotBall(BYTE pFrame[], const BYTE BallPixel[], int iPixelSize);
 
     // Moves the ball 1 pixel in each of the x and y directions
-    void MoveBall(CRefTime rt);
+    void MoveBall(LONG ms);
 
     int GetImageWidth() { return m_iImageWidth ;}
     int GetImageHeight() { return m_iImageHeight ;}

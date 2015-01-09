@@ -32,5 +32,25 @@ public:
     virtual int GetMonitorCount() = 0;
     virtual void GetMonitorName(int nMonitorIndex, char *cNameBuf, int nNameBufSize) = 0;
     virtual bool SetMonitorIndex(int nMonitorIndex) = 0;
+    bool DrawFrame(const void *pFrameData, int nFrameSize);
 };
+
+#undef  INTERFACE
+#define INTERFACE   ISampleReceiver
+
+DECLARE_INTERFACE_IID_(ISampleReceiver, IUnknown, "2BFC1CAC-6E74-4249-A579-F6FE20FDC7E4")
+{
+    BEGIN_INTERFACE
+
+        // *** IUnknown methods ***
+        STDMETHOD(QueryInterface)(THIS_ REFIID riid, void **ppv) PURE;
+        STDMETHOD_(ULONG, AddRef)(THIS)PURE;
+        STDMETHOD_(ULONG, Release)(THIS)PURE;
+
+        // ** ISampleReceiver methods ***
+        STDMETHOD(ReceiveSample)(THIS_ void *pSampleData, int iSampleDataSize) PURE;
+
+    END_INTERFACE
+}; 
+
 

@@ -15,7 +15,7 @@ typedef void * MMR_HANDLE;
 MMR_HANDLE MMR_API MMR_Initialize();
 void       MMR_API MMR_GetCards(MMR_HANDLE handle, char*** names, int *count);
 void       MMR_API MMR_Start(MMR_HANDLE handle, int cardIndex, int width, int height);
-void       MMR_API MMR_SendFrame(MMR_HANDLE handle, const char* buf);
+void       MMR_API MMR_SendFrame(MMR_HANDLE handle, const char* buf, int buf_size);
 void       MMR_API MMR_Stop(MMR_HANDLE handle);
 void       MMR_API MMR_Uninitialize();
 

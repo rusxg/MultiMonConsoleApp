@@ -1,6 +1,6 @@
 #pragma once
-
-#include "generator.h"
+#include "streams.h"
+#include <guiddef.h>
 
 // {C49C7E7A-354F-414F-8032-1D091C5D13BA}
 DEFINE_GUID(CLSID_GeneratorFilter,
@@ -16,11 +16,12 @@ class GeneratorStream;
 //------------------------------------------------------------------------------
 // Class GeneratorFilter
 //
-class GeneratorFilter : public CSource
+class GeneratorFilter
+    : public CSource
 {
 public:
 
-    // The only allowed way to create Bouncing balls!
+    // The only allowed way to create generator filter
     static CUnknown * WINAPI CreateInstance(LPUNKNOWN lpunk, HRESULT *phr);
 
 private:
@@ -34,7 +35,9 @@ private:
 //------------------------------------------------------------------------------
 // Class GeneratorStream
 //
-class GeneratorStream : public CSourceStream
+class GeneratorStream
+    : public CSourceStream
+    , public ISampleReceiver
 {
 
 public:
@@ -42,7 +45,8 @@ public:
     GeneratorStream(HRESULT *phr, GeneratorFilter *pParent, LPCWSTR pPinName);
     ~GeneratorStream();
 
-    // plots a ball into the supplied video frame
+    HRESULT DoBufferProcessingLoop(void);    // the loop executed whilst running
+
     HRESULT FillBuffer(IMediaSample *pms);
 
     // Ask for buffers of the size appropriate to the agreed media type
@@ -63,6 +67,12 @@ public:
     // Quality control notifications sent to us
     STDMETHODIMP Notify(IBaseFilter * pSender, Quality q);
 
+    DECLARE_IUNKNOWN
+    STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, __deref_out void ** ppv);
+
+    // ISampleReceiver
+    STDMETHODIMP ReceiveSample(void *pSampleData, int iSampleDataSize);
+
 private:
 
     int m_iImageHeight;                 // The current image height
@@ -70,17 +80,12 @@ private:
     int m_iRepeatTime;                  // Time in msec between frames
     const int m_iDefaultRepeatTime;     // Initial m_iRepeatTime
 
-    BYTE m_BallPixel[4];                // Represents one coloured ball
-    int m_iPixelSize;                   // The pixel size in bytes
-    PALETTEENTRY m_Palette[256];        // The optimal palette for the image
-
     CCritSec m_cSharedState;            // Lock on m_rtSampleTime and m_Ball
     CRefTime m_rtSampleTime;            // The time stamp for each sample
-    PictureGenerator *m_Generator;      // The current generator object
 
-    // set up the palette appropriately
-    enum Colour {Red, Blue, Green, Yellow};
-    HRESULT SetPaletteEntries(Colour colour);
+    CAMEvent m_evSampleCopied;
+    void * m_pSampleData;
+    int m_iSampleDataSize;
 
 }; // GeneratorStream
     

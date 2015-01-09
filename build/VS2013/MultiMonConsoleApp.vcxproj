@@ -118,9 +118,7 @@ copy  ..\..\MultiMonRenderer\bin\MultiMonRendererd.pdb $(OutputPath)\MultiMonRen
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp" />
-    <ClCompile Include="..\..\src\generator.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\src\generator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\generator.h" />

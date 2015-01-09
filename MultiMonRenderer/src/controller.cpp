@@ -68,6 +68,13 @@ HRESULT Controller::CreateGraphObjects()
         return false;
     }
 
+    hr = pPin->QueryInterface(__uuidof(ISampleReceiver), (void **)&m_pSampleReceiver);
+    if (FAILED(hr))
+    {
+        printf("Can't find SampleReceiver interface\n");
+        return false;
+    }
+
     hr = m_pGraph->RenderEx(pPin, AM_RENDEREX_RENDERTOEXISTINGRENDERERS, NULL);
     if (FAILED(hr))
     {
@@ -249,4 +256,10 @@ bool Controller::SetMonitorIndex( int nMonitorIndex )
 
     m_nMonitorIndex = nMonitorIndex;
     return true;
+}
+
+bool Controller::DrawFrame(const void *pFrameData, int nFrameSize)
+{
+    HRESULT hr = m_pSampleReceiver->ReceiveSample((void *)pFrameData, nFrameSize);
+    return SUCCEEDED(hr);
 }

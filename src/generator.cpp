@@ -1,4 +1,5 @@
-#include <streams.h>
+#include <windows.h>
+#include <assert.h>
 #include "generator.h"
 
 
@@ -14,8 +15,8 @@ PictureGenerator::PictureGenerator(int iImageWidth, int iImageHeight, int iBallS
     m_yDir(UP)
 {
     // Check we have some (arbitrary) space to bounce in.
-    ASSERT(iImageWidth > 2*iBallSize);
-    ASSERT(iImageHeight > 2*iBallSize);
+    assert(iImageWidth > 2*iBallSize);
+    assert(iImageHeight > 2*iBallSize);
 
     // Random position for showing off a video mixer
     m_iRandX = rand();
@@ -24,14 +25,14 @@ PictureGenerator::PictureGenerator(int iImageWidth, int iImageHeight, int iBallS
 } // (Constructor)
 
 
-void PictureGenerator::PlotBall(BYTE pFrame[], BYTE BallPixel[], int iPixelSize)
+void PictureGenerator::PlotBall(BYTE pFrame[], const BYTE BallPixel[], int iPixelSize)
 {
-    ASSERT(m_x >= 0);
-    ASSERT(m_x <= m_iAvailableWidth);
-    ASSERT(m_y >= 0);
-    ASSERT(m_y <= m_iAvailableHeight);
-    ASSERT(pFrame != NULL);
-    ASSERT(BallPixel != NULL);
+    assert(m_x >= 0);
+    assert(m_x <= m_iAvailableWidth);
+    assert(m_y >= 0);
+    assert(m_y <= m_iAvailableHeight);
+    assert(pFrame != NULL);
+    assert(BallPixel != NULL);
 
     // The current byte of interest in the frame
     BYTE *pBack;
@@ -82,10 +83,10 @@ int PictureGenerator::BallPosition(int iPixelTime, // Millisecs per pixel
 } // BallPosition
 
 
-void PictureGenerator::MoveBall(CRefTime rt)
+void PictureGenerator::MoveBall(LONG ms)
 {
-    m_x = BallPosition(10, m_iAvailableWidth, rt.Millisecs(), m_iRandX);
-    m_y = BallPosition(10, m_iAvailableHeight, rt.Millisecs(), m_iRandY);
+    m_x = BallPosition(10, m_iAvailableWidth, ms, m_iRandX);
+    m_y = BallPosition(10, m_iAvailableHeight, ms, m_iRandY);
 
 } // MoveBall
 

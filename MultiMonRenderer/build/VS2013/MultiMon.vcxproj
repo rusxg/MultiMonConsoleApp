@@ -131,7 +131,6 @@
     <ClCompile Include="..\..\src\baseclasses\wxlist.cpp" />
     <ClCompile Include="..\..\src\baseclasses\wxutil.cpp" />
     <ClCompile Include="..\..\src\filter.cpp" />
-    <ClCompile Include="..\..\src\generator.cpp" />
     <ClCompile Include="..\..\src\MultiMonRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +175,6 @@
     <ClInclude Include="..\..\src\canvas.h" />
     <ClInclude Include="..\..\src\controller.h" />
     <ClInclude Include="..\..\src\filter.h" />
-    <ClInclude Include="..\..\src\generator.h" />
     <ClInclude Include="..\..\src\common.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

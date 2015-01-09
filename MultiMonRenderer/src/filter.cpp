@@ -1,7 +1,7 @@
 #include <streams.h>
 #include <olectl.h>
 #include <initguid.h>
-#include "generator.h"
+#include "common.h"
 #include "filter.h"
 
 #pragma warning(disable:4710)  // 'function': function not inlined (optimzation)
@@ -109,18 +109,11 @@ GeneratorStream::GeneratorStream(HRESULT *phr,
     CSourceStream(NAME("Picture Generator Filter"),phr, pParent, pPinName),
     m_iImageWidth(320),
     m_iImageHeight(240),
-    m_iDefaultRepeatTime(20)
+    m_iDefaultRepeatTime(20),
+    m_evSampleCopied(phr),
+    m_pSampleData(NULL),
+    m_iSampleDataSize(0)
 {
-    ASSERT(phr);
-    CAutoLock cAutoLock(&m_cSharedState);
-
-    m_Generator = new PictureGenerator(m_iImageWidth, m_iImageHeight);
-    if(m_Generator == NULL)
-    {
-        if(phr)
-            *phr = E_OUTOFMEMORY;
-    }
-
 } // (Constructor)
 
 
@@ -129,22 +122,15 @@ GeneratorStream::GeneratorStream(HRESULT *phr,
 //
 GeneratorStream::~GeneratorStream()
 {
-    CAutoLock cAutoLock(&m_cSharedState);
-    if(m_Generator)
-        delete m_Generator;
-
 } // (Destructor)
 
 
 //
 // FillBuffer
 //
-// Plots a ball into the supplied video buffer
-//
 HRESULT GeneratorStream::FillBuffer(IMediaSample *pms)
 {
     CheckPointer(pms,E_POINTER);
-    ASSERT(m_Generator);
 
     BYTE *pData;
     long lDataLen;
@@ -156,11 +142,9 @@ HRESULT GeneratorStream::FillBuffer(IMediaSample *pms)
     {
         CAutoLock cAutoLockShared(&m_cSharedState);
 
-        // If we haven't just cleared the buffer delete the old
-        // ball and move the ball on
-
-        m_Generator->MoveBall(m_rtSampleTime - (LONG) m_iRepeatTime);
-        m_Generator->PlotBall(pData, m_BallPixel, m_iPixelSize);
+        assert(m_pSampleData && m_iSampleDataSize);
+        assert(m_iSampleDataSize <= lDataLen);
+        CopyMemory(pData, m_pSampleData, m_iSampleDataSize);
 
         // The current time is the sample's start
         CRefTime rtStart = m_rtSampleTime;
@@ -247,7 +231,7 @@ HRESULT GeneratorStream::GetMediaType(int iPosition, CMediaType *pmt)
 
     // Have we run off the end of types?
 
-    if(iPosition > 4)
+    if(iPosition > 1)
     {
         return VFW_S_NO_MORE_ITEMS;
     }
@@ -261,75 +245,12 @@ HRESULT GeneratorStream::GetMediaType(int iPosition, CMediaType *pmt)
     switch(iPosition)
     {
         case 0:
-        {    
-            // Return our highest quality 32bit format
-
-            // since we use RGB888 (the default for 32 bit), there is
-            // no reason to use BI_BITFIELDS to specify the RGB
-            // masks. Also, not everything supports BI_BITFIELDS
-
-            SetPaletteEntries(Yellow);
-            pvi->bmiHeader.biCompression = BI_RGB;
-            pvi->bmiHeader.biBitCount    = 32;
-            break;
-        }
-
-        case 1:
         {   // Return our 24bit format
 
-            SetPaletteEntries(Green);
             pvi->bmiHeader.biCompression = BI_RGB;
             pvi->bmiHeader.biBitCount    = 24;
             break;
         }
-
-        case 2:
-        {       
-            // 16 bit per pixel RGB565
-
-            // Place the RGB masks as the first 3 doublewords in the palette area
-            for(int i = 0; i < 3; i++)
-                pvi->TrueColorInfo.dwBitMasks[i] = bits565[i];
-
-            SetPaletteEntries(Blue);
-            pvi->bmiHeader.biCompression = BI_BITFIELDS;
-            pvi->bmiHeader.biBitCount    = 16;
-            break;
-        }
-
-        case 3:
-        {   // 16 bits per pixel RGB555
-
-            // Place the RGB masks as the first 3 doublewords in the palette area
-            for(int i = 0; i < 3; i++)
-                pvi->TrueColorInfo.dwBitMasks[i] = bits555[i];
-
-            SetPaletteEntries(Blue);
-            pvi->bmiHeader.biCompression = BI_BITFIELDS;
-            pvi->bmiHeader.biBitCount    = 16;
-            break;
-        }
-
-        case 4:
-        {   // 8 bit palettised
-
-            SetPaletteEntries(Red);
-            pvi->bmiHeader.biCompression = BI_RGB;
-            pvi->bmiHeader.biBitCount    = 8;
-            pvi->bmiHeader.biClrUsed        = iPALETTE_COLORS;
-            break;
-        }
-    }
-
-    // (Adjust the parameters common to all formats...)
-
-    // put the optimal palette in place
-    for(int i = 0; i < iPALETTE_COLORS; i++)
-    {
-        pvi->TrueColorInfo.bmiColors[i].rgbRed      = m_Palette[i].peRed;
-        pvi->TrueColorInfo.bmiColors[i].rgbBlue     = m_Palette[i].peBlue;
-        pvi->TrueColorInfo.bmiColors[i].rgbGreen    = m_Palette[i].peGreen;
-        pvi->TrueColorInfo.bmiColors[i].rgbReserved = 0;
     }
 
     pvi->bmiHeader.biSize       = sizeof(BITMAPINFOHEADER);
@@ -359,8 +280,8 @@ HRESULT GeneratorStream::GetMediaType(int iPosition, CMediaType *pmt)
 //
 // CheckMediaType
 //
-// We will accept 8, 16, 24 or 32 bit video formats, in any
-// image size that gives room to bounce.
+// We will accept 24 bit video formats, in any
+// image size.
 // Returns E_INVALIDARG if the mediatype is not acceptable
 //
 HRESULT GeneratorStream::CheckMediaType(const CMediaType *pMediaType)
@@ -378,11 +299,7 @@ HRESULT GeneratorStream::CheckMediaType(const CMediaType *pMediaType)
     if (SubType == NULL)
         return E_INVALIDARG;
 
-    if((*SubType != MEDIASUBTYPE_RGB8)
-        && (*SubType != MEDIASUBTYPE_RGB565)
-        && (*SubType != MEDIASUBTYPE_RGB555)
-        && (*SubType != MEDIASUBTYPE_RGB24)
-        && (*SubType != MEDIASUBTYPE_RGB32))
+    if(*SubType != MEDIASUBTYPE_RGB24)
     {
         return E_INVALIDARG;
     }
@@ -393,23 +310,19 @@ HRESULT GeneratorStream::CheckMediaType(const CMediaType *pMediaType)
     if(pvi == NULL)
         return E_INVALIDARG;
 
-    // Check the image size. As my default ball is 10 pixels big
-    // look for at least a 20x20 image. This is an arbitary size constraint,
-    // but it avoids balls that are bigger than the picture...
-
     if((pvi->bmiHeader.biWidth < 20) || ( abs(pvi->bmiHeader.biHeight) < 20))
     {
         return E_INVALIDARG;
     }
 
     // Check if the image width & height have changed
-    if(pvi->bmiHeader.biWidth != m_Generator->GetImageWidth() || 
-       abs(pvi->bmiHeader.biHeight) != m_Generator->GetImageHeight())
-    {
-        // If the image width/height is changed, fail CheckMediaType() to force
-        // the renderer to resize the image.
-        return E_INVALIDARG;
-    }
+//     if(pvi->bmiHeader.biWidth != m_Generator->GetImageWidth() || 
+//        abs(pvi->bmiHeader.biHeight) != m_Generator->GetImageHeight())
+//     {
+//         // If the image width/height is changed, fail CheckMediaType() to force
+//         // the renderer to resize the image.
+//         return E_INVALIDARG;
+//     }
 
 
     return S_OK;  // This format is acceptable.
@@ -420,7 +333,7 @@ HRESULT GeneratorStream::CheckMediaType(const CMediaType *pMediaType)
 //
 // DecideBufferSize
 //
-// This will always be called after the format has been sucessfully
+// This will always be called after the format has been successfully
 // negotiated. So we have a look at m_mt to see what size image we agreed.
 // Then we can ask for buffers of the correct size to contain them.
 //
@@ -488,55 +401,15 @@ HRESULT GeneratorStream::SetMediaType(const CMediaType *pMediaType)
 
         switch(pvi->bmiHeader.biBitCount)
         {
-            case 8:     // Make a red pixel
-
-                m_BallPixel[0] = 10;    // 0 is palette index of red
-                m_iPixelSize   = 1;
-                SetPaletteEntries(Red);
-                break;
-
-            case 16:    // Make a blue pixel
-
-                m_BallPixel[0] = 0xf8;  // 00000000 00011111 is blue in rgb555 or rgb565
-                m_BallPixel[1] = 0x0;   // don't forget the byte ordering within the mask word.
-                m_iPixelSize   = 2;
-                SetPaletteEntries(Blue);
-                break;
-
             case 24:    // Make a green pixel
 
-                m_BallPixel[0] = 0x0;
-                m_BallPixel[1] = 0xff;
-                m_BallPixel[2] = 0x0;
-                m_iPixelSize   = 3;
-                SetPaletteEntries(Green);
-                break;
-
-            case 32:    // Make a yellow pixel
-
-                m_BallPixel[0] = 0x0;
-                m_BallPixel[1] = 0xff;
-                m_BallPixel[2] = 0xff;
-                m_BallPixel[3] = 0x00;
-                m_iPixelSize   = 4;
-                SetPaletteEntries(Yellow);
-                break;
-
-            default:
-                // We should never agree any other pixel sizes
-                ASSERT(FALSE);
+//                 m_BallPixel[0] = 0x0;
+//                 m_BallPixel[1] = 0xff;
+//                 m_BallPixel[2] = 0x0;
+//                 m_iPixelSize   = 3;
+//                 SetPaletteEntries(Green);
                 break;
         }
-
-        PictureGenerator *pNewBall = new PictureGenerator(pvi->bmiHeader.biWidth, abs(pvi->bmiHeader.biHeight));
-
-        if(pNewBall)
-        {
-            delete m_Generator;
-            m_Generator = pNewBall;
-        }
-        else
-            hr = E_OUTOFMEMORY;
 
         return NOERROR;
     } 
@@ -564,57 +437,125 @@ HRESULT GeneratorStream::OnThreadCreate()
 
 } // OnThreadCreate
 
-
-//
-// SetPaletteEntries
-//
-// If we set our palette to the current system palette + the colours we want
-// the system has the least amount of work to do whilst plotting our images,
-// if this stream is rendered to the current display. The first non reserved
-// palette slot is at m_Palette[10], so put our first colour there. Also
-// guarantees that black is always represented by zero in the frame buffer
-//
-HRESULT GeneratorStream::SetPaletteEntries(Colour color)
+HRESULT GeneratorStream::DoBufferProcessingLoop(void)
 {
-    CAutoLock cAutoLock(m_pFilter->pStateLock());
 
-    HDC hdc = GetDC(NULL);  // hdc for the current display.
-    UINT res = GetSystemPaletteEntries(hdc, 0, iPALETTE_COLORS, (LPPALETTEENTRY) &m_Palette);
-    ReleaseDC(NULL, hdc);
+    Command com;
 
-    if(res == 0)
-        return E_FAIL;
+    OnThreadStartPlay();
 
-    switch(color)
+    do
     {
-        case Red:
-            m_Palette[10].peBlue  = 0;
-            m_Palette[10].peGreen = 0;
-            m_Palette[10].peRed   = 0xff;
-            break;
+        while (!CheckRequest(&com))
+        {
 
-        case Yellow:
-            m_Palette[10].peBlue  = 0;
-            m_Palette[10].peGreen = 0xff;
-            m_Palette[10].peRed   = 0xff;
-            break;
+            IMediaSample *pSample;
 
-        case Blue:
-            m_Palette[10].peBlue  = 0xff;
-            m_Palette[10].peGreen = 0;
-            m_Palette[10].peRed   = 0;
-            break;
+            HRESULT hr = GetDeliveryBuffer(&pSample, NULL, NULL, 0);
+            if (FAILED(hr))
+            {
+                Sleep(1);
+                continue;	// go round again. Perhaps the error will go away
+                // or the allocator is decommited & we will be asked to
+                // exit soon.
+            }
 
-        case Green:
-            m_Palette[10].peBlue  = 0;
-            m_Palette[10].peGreen = 0xff;
-            m_Palette[10].peRed   = 0;
-            break;
+            CAutoLock cAutoLockShared(&m_cSharedState);
+            if (!m_pSampleData)
+            {
+                pSample->Release();
+                Sleep(1);
+                continue;	// go round again. Perhaps we will get picture data later
+            }
+
+            // Virtual function user will override.
+            hr = FillBuffer(pSample);
+            m_evSampleCopied.Set();
+
+            if (hr == S_OK)
+            {
+                hr = Deliver(pSample);
+                pSample->Release();
+
+                // downstream filter returns S_FALSE if it wants us to
+                // stop or an error if it's reporting an error.
+                if (hr != S_OK)
+                {
+                    DbgLog((LOG_TRACE, 2, TEXT("Deliver() returned %08x; stopping"), hr));
+                    return S_OK;
+                }
+
+            }
+            else if (hr == S_FALSE)
+            {
+                // derived class wants us to stop pushing data
+                pSample->Release();
+                DeliverEndOfStream();
+                return S_OK;
+            }
+            else
+            {
+                // derived class encountered an error
+                pSample->Release();
+                DbgLog((LOG_ERROR, 1, TEXT("Error %08lX from FillBuffer!!!"), hr));
+                DeliverEndOfStream();
+                m_pFilter->NotifyEvent(EC_ERRORABORT, hr, 0);
+                return hr;
+            }
+
+            // all paths release the sample
+        }
+
+        // For all commands sent to us there must be a Reply call!
+
+        if (com == CMD_RUN || com == CMD_PAUSE)
+        {
+            Reply(NOERROR);
+        }
+        else if (com != CMD_STOP)
+        {
+            Reply((DWORD)E_UNEXPECTED);
+            DbgLog((LOG_ERROR, 1, TEXT("Unexpected command!!!")));
+        }
+    } while (com != CMD_STOP);
+
+    return S_FALSE;
+}
+
+STDMETHODIMP
+GeneratorStream::NonDelegatingQueryInterface(REFIID riid, __deref_out void ** ppv)
+{
+    /* Do we have this interface */
+
+    if (riid == __uuidof(ISampleReceiver)) {
+        return GetInterface((ISampleReceiver *) this, ppv);
     }
+    else {
+        return CSourceStream::NonDelegatingQueryInterface(riid, ppv);
+    }
+}
 
-    m_Palette[10].peFlags = 0;
-    return NOERROR;
+STDMETHODIMP GeneratorStream::ReceiveSample(void *pSampleData, int iSampleDataSize)
+{
+    HRESULT hr = E_FAIL;
+    {
+        CAutoLock cAutoLockShared(&m_cSharedState);
+        m_pSampleData = pSampleData;
+        m_iSampleDataSize = iSampleDataSize;
+    }
+    static const int FEEDBACK_WAIT_TIMEOUT = 3000; // 3 sec
+    if (m_evSampleCopied.Wait(FEEDBACK_WAIT_TIMEOUT))
+    {
+        // sample copied successfully
+        hr = S_OK;
+    }
+    {
+        CAutoLock cAutoLockShared(&m_cSharedState);
+        m_pSampleData = NULL;
+        m_iSampleDataSize = 0;
+    }
+    return hr;
+}
 
-} // SetPaletteEntries
 
 

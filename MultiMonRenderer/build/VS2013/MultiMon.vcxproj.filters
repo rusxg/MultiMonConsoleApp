@@ -97,7 +97,6 @@
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\controller.cpp" />
     <ClCompile Include="..\..\src\filter.cpp" />
-    <ClCompile Include="..\..\src\generator.cpp" />
     <ClCompile Include="..\..\src\canvas.cpp" />
     <ClCompile Include="..\..\src\MultiMonRenderer.cpp" />
   </ItemGroup>
@@ -220,7 +219,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\controller.h" />
     <ClInclude Include="..\..\src\filter.h" />
-    <ClInclude Include="..\..\src\generator.h" />
     <ClInclude Include="..\..\src\common.h" />
     <ClInclude Include="..\..\src\canvas.h" />
     <ClInclude Include="..\..\include\MultiMonRenderer.h" />
