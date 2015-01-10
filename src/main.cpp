@@ -104,7 +104,7 @@ unsigned __stdcall RenderingThread(void *context)
     static const int PICTURE_BUFFER_SIZE = 3 * PICTURE_WIDTH * PICTURE_HEIGHT;
 
     BYTE *pPictureBuffer = (BYTE *)malloc(PICTURE_BUFFER_SIZE);
-    PictureGenerator generator;
+    PictureGenerator generator(PICTURE_WIDTH, PICTURE_HEIGHT);
     LONG lTime = 0;
     for (;;)
     {

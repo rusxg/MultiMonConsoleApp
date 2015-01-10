@@ -48,6 +48,11 @@ void MMR_API MMR_Start(MMR_HANDLE handle, int cardIndex, int width, int height)
     context->m_canvas.Initialize();
     context->m_controller.SetCanvas(&context->m_canvas);
     context->m_controller.SetMonitorIndex(cardIndex);
+    if (!context->m_controller.SetFrameDimensions(width, height))
+    {
+        printf("Invalid picture dimensions\n");
+        return;
+    }
 
     if (!context->m_controller.Start())
     {

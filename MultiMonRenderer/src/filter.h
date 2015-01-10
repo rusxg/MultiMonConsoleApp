@@ -71,6 +71,7 @@ public:
     STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, __deref_out void ** ppv);
 
     // IFrameReceiver
+    STDMETHODIMP SetFrameDimensions(int nWidth, int nHeight);
     STDMETHODIMP ReceiveFrame(void *pFrameData, int iFrameDataSize, REFERENCE_TIME frameDuration);
 
 private:

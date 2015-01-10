@@ -515,5 +515,17 @@ STDMETHODIMP GeneratorStream::ReceiveFrame(void *pFrameData, int iFrameDataSize,
     return hr;
 }
 
+STDMETHODIMP GeneratorStream::SetFrameDimensions(int nWidth, int nHeight)
+{
+    if (nWidth <= 0 || nHeight <= 0)
+    {
+        return E_INVALIDARG;
+    }
+
+    m_iImageWidth = nWidth;
+    m_iImageHeight = nHeight;
+    return S_OK;
+}
+
 
 

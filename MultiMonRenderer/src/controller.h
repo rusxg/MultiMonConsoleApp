@@ -30,8 +30,9 @@ public:
     int GetMonitorCount();
     void GetMonitorName(int nMonitorIndex, char *cNameBuf, int nNameBufSize);
     bool SetMonitorIndex(int nMonitorIndex);
-    bool DrawFrame(const void *pFrameData, int nFrameSize, REFERENCE_TIME frameDuration);
+    bool SetFrameDimensions(int nWidth, int nHeight);
     bool Start();
+    bool DrawFrame(const void *pFrameData, int nFrameSize, REFERENCE_TIME frameDuration);
     void Stop();
 
     // ICanvasPaintCallback
@@ -54,4 +55,6 @@ protected:
     ICanvas *m_pCanvas;
 
     IFrameReceiverPtr m_pFrameReceiver;
+    int m_nFrameWidth;
+    int m_nFrameHeight;
 };

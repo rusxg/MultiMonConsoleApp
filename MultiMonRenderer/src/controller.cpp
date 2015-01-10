@@ -75,6 +75,8 @@ HRESULT Controller::CreateGraphObjects()
         return false;
     }
 
+    m_pFrameReceiver->SetFrameDimensions(m_nFrameWidth, m_nFrameHeight);
+
     hr = m_pGraph->RenderEx(pPin, AM_RENDEREX_RENDERTOEXISTINGRENDERERS, NULL);
     if (FAILED(hr))
     {
@@ -202,6 +204,8 @@ Controller::Controller()
 , m_bCoInitialized(false)
 , m_nMonitorCount(0)
 , m_aMonitorInfo(NULL)
+, m_nFrameWidth(320)
+, m_nFrameHeight(240)
 {
 }
 
@@ -270,5 +274,18 @@ void Controller::Stop()
     {
         m_pControl->Stop();
     }
+    m_pGraph = NULL;
+    m_pControl = NULL;
+    m_pFrameReceiver = NULL;
+}
 
+bool Controller::SetFrameDimensions(int nWidth, int nHeight)
+{
+    if (nWidth <= 0 || nHeight <= 0)
+        return false;
+
+    m_nFrameWidth = nWidth;
+    m_nFrameHeight = nHeight;
+
+    return true;
 }
