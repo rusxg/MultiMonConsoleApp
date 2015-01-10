@@ -93,6 +93,7 @@ int main(void)
     }
 
     MMR_Stop(params.mmrHandle);
+    MMR_Uninitialize(params.mmrHandle);
 
     return 0;
 }
@@ -120,7 +121,8 @@ unsigned __stdcall RenderingThread(void *context)
         static const BYTE pBallPixel[] = { 0xFF, 0xFF, 0xFF }; // white color
         generator.PlotBall(pPictureBuffer, &pBallPixel[0], sizeof(pBallPixel));
 
-        MMR_SendFrame(params->mmrHandle, (const char *)pPictureBuffer, PICTURE_BUFFER_SIZE);
+        MMR_SendFrame(params->mmrHandle, (const char *)pPictureBuffer, PICTURE_BUFFER_SIZE,
+            MMR_MILLISECONDS_TO_TIME_TICKS(MILLISECONDS_PER_FRAME));
     }
 
     free(pPictureBuffer);

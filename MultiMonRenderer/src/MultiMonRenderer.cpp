@@ -56,18 +56,20 @@ void MMR_API MMR_Start(MMR_HANDLE handle, int cardIndex, int width, int height)
     }
 }
 
-void MMR_API MMR_SendFrame(MMR_HANDLE handle, const char* buf, int buf_size)
+void MMR_API MMR_SendFrame(MMR_HANDLE handle, const char* buf, int bufSize, MMR_TIME frameDuration)
 {
     MMR_CONTEXT *context = (MMR_CONTEXT *)handle;
-    context->m_controller.DrawFrame(buf, buf_size);
+    context->m_controller.DrawFrame(buf, bufSize, frameDuration);
 }
 
 void MMR_API MMR_Stop(MMR_HANDLE handle)
 {
-
+    MMR_CONTEXT *context = (MMR_CONTEXT *)handle;
+    context->m_controller.Stop();
 }
 
-void MMR_API MMR_Uninitialize() 
+void MMR_API MMR_Uninitialize(MMR_HANDLE handle)
 {
-
+    MMR_CONTEXT *context = (MMR_CONTEXT *)handle;
+    delete context;
 }

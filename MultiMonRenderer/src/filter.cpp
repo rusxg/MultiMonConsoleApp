@@ -109,10 +109,10 @@ GeneratorStream::GeneratorStream(HRESULT *phr,
     CSourceStream(NAME("Picture Generator Filter"),phr, pParent, pPinName),
     m_iImageWidth(320),
     m_iImageHeight(240),
-    m_iDefaultRepeatTime(20),
-    m_evSampleCopied(phr),
-    m_pSampleData(NULL),
-    m_iSampleDataSize(0)
+    m_evFrameCopied(phr),
+    m_pFrameData(NULL),
+    m_iFrameDataSize(0),
+    m_tFrameDuration(0)
 {
 } // (Constructor)
 
@@ -142,15 +142,15 @@ HRESULT GeneratorStream::FillBuffer(IMediaSample *pms)
     {
         CAutoLock cAutoLockShared(&m_cSharedState);
 
-        assert(m_pSampleData && m_iSampleDataSize);
-        assert(m_iSampleDataSize <= lDataLen);
-        CopyMemory(pData, m_pSampleData, m_iSampleDataSize);
+        assert(m_pFrameData && m_iFrameDataSize);
+        assert(m_iFrameDataSize <= lDataLen);
+        CopyMemory(pData, m_pFrameData, m_iFrameDataSize);
 
         // The current time is the sample's start
         CRefTime rtStart = m_rtSampleTime;
 
         // Increment to find the finish time
-        m_rtSampleTime += (LONG)m_iRepeatTime;
+        m_rtSampleTime += m_tFrameDuration;
 
         pms->SetTime((REFERENCE_TIME *) &rtStart,(REFERENCE_TIME *) &m_rtSampleTime);
     }
@@ -171,26 +171,6 @@ HRESULT GeneratorStream::FillBuffer(IMediaSample *pms)
 STDMETHODIMP GeneratorStream::Notify(IBaseFilter * pSender, Quality q)
 {
     // Adjust the repeat rate.
-    if(q.Proportion<=0)
-    {
-        m_iRepeatTime = 1000;        // We don't go slower than 1 per second
-    }
-    else
-    {
-        m_iRepeatTime = m_iRepeatTime*1000 / q.Proportion;
-        if(m_iRepeatTime>1000)
-        {
-            m_iRepeatTime = 1000;    // We don't go slower than 1 per second
-        }
-        else if(m_iRepeatTime<10)
-        {
-            m_iRepeatTime = 10;      // We don't go faster than 100/sec
-        }
-    }
-
-    // skip forwards
-    if(q.Late > 0)
-        m_rtSampleTime += q.Late;
 
     return NOERROR;
 
@@ -199,25 +179,6 @@ STDMETHODIMP GeneratorStream::Notify(IBaseFilter * pSender, Quality q)
 
 //
 // GetMediaType
-//
-// I _prefer_ 5 formats - 8, 16 (*2), 24 or 32 bits per pixel and
-// I will suggest these with an image size of 320x240. However
-// I can accept any image size which gives me some space to bounce.
-//
-// A bit of fun:
-//      8 bit displays get red balls
-//      16 bit displays get blue
-//      24 bit see green
-//      And 32 bit see yellow
-//
-// Prefered types should be ordered by quality, zero as highest quality
-// Therefore iPosition =
-// 0    return a 32bit mediatype
-// 1    return a 24bit mediatype
-// 2    return 16bit RGB565
-// 3    return a 16bit mediatype (rgb555)
-// 4    return 8 bit palettised format
-// (iPosition > 4 is invalid)
 //
 HRESULT GeneratorStream::GetMediaType(int iPosition, CMediaType *pmt)
 {
@@ -429,10 +390,6 @@ HRESULT GeneratorStream::OnThreadCreate()
     CAutoLock cAutoLockShared(&m_cSharedState);
     m_rtSampleTime = 0;
 
-    // we need to also reset the repeat time in case the system
-    // clock is turned off after m_iRepeatTime gets very big
-    m_iRepeatTime = m_iDefaultRepeatTime;
-
     return NOERROR;
 
 } // OnThreadCreate
@@ -461,7 +418,7 @@ HRESULT GeneratorStream::DoBufferProcessingLoop(void)
             }
 
             CAutoLock cAutoLockShared(&m_cSharedState);
-            if (!m_pSampleData)
+            if (!m_pFrameData)
             {
                 pSample->Release();
                 Sleep(1);
@@ -470,7 +427,7 @@ HRESULT GeneratorStream::DoBufferProcessingLoop(void)
 
             // Virtual function user will override.
             hr = FillBuffer(pSample);
-            m_evSampleCopied.Set();
+            m_evFrameCopied.Set();
 
             if (hr == S_OK)
             {
@@ -527,32 +484,33 @@ GeneratorStream::NonDelegatingQueryInterface(REFIID riid, __deref_out void ** pp
 {
     /* Do we have this interface */
 
-    if (riid == __uuidof(ISampleReceiver)) {
-        return GetInterface((ISampleReceiver *) this, ppv);
+    if (riid == __uuidof(IFrameReceiver)) {
+        return GetInterface((IFrameReceiver *) this, ppv);
     }
     else {
         return CSourceStream::NonDelegatingQueryInterface(riid, ppv);
     }
 }
 
-STDMETHODIMP GeneratorStream::ReceiveSample(void *pSampleData, int iSampleDataSize)
+STDMETHODIMP GeneratorStream::ReceiveFrame(void *pFrameData, int iFrameDataSize, REFERENCE_TIME frameDuration)
 {
     HRESULT hr = E_FAIL;
     {
         CAutoLock cAutoLockShared(&m_cSharedState);
-        m_pSampleData = pSampleData;
-        m_iSampleDataSize = iSampleDataSize;
+        m_pFrameData = pFrameData;
+        m_iFrameDataSize = iFrameDataSize;
+        m_tFrameDuration = frameDuration;
     }
     static const int FEEDBACK_WAIT_TIMEOUT = 3000; // 3 sec
-    if (m_evSampleCopied.Wait(FEEDBACK_WAIT_TIMEOUT))
+    if (m_evFrameCopied.Wait(FEEDBACK_WAIT_TIMEOUT))
     {
-        // sample copied successfully
+        // frame copied successfully
         hr = S_OK;
     }
     {
         CAutoLock cAutoLockShared(&m_cSharedState);
-        m_pSampleData = NULL;
-        m_iSampleDataSize = 0;
+        m_pFrameData = NULL;
+        m_iFrameDataSize = 0;
     }
     return hr;
 }

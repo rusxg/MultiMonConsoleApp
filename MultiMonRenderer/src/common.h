@@ -32,13 +32,15 @@ public:
     virtual int GetMonitorCount() = 0;
     virtual void GetMonitorName(int nMonitorIndex, char *cNameBuf, int nNameBufSize) = 0;
     virtual bool SetMonitorIndex(int nMonitorIndex) = 0;
-    bool DrawFrame(const void *pFrameData, int nFrameSize);
+    virtual bool Start() = 0;
+    virtual void Stop() = 0;
+    virtual bool DrawFrame(const void *pFrameData, int nFrameSize, LONGLONG frameDuration) = 0;
 };
 
 #undef  INTERFACE
-#define INTERFACE   ISampleReceiver
+#define INTERFACE   IFrameReceiver
 
-DECLARE_INTERFACE_IID_(ISampleReceiver, IUnknown, "2BFC1CAC-6E74-4249-A579-F6FE20FDC7E4")
+DECLARE_INTERFACE_IID_(IFrameReceiver, IUnknown, "2BFC1CAC-6E74-4249-A579-F6FE20FDC7E4")
 {
     BEGIN_INTERFACE
 
@@ -47,8 +49,8 @@ DECLARE_INTERFACE_IID_(ISampleReceiver, IUnknown, "2BFC1CAC-6E74-4249-A579-F6FE2
         STDMETHOD_(ULONG, AddRef)(THIS)PURE;
         STDMETHOD_(ULONG, Release)(THIS)PURE;
 
-        // ** ISampleReceiver methods ***
-        STDMETHOD(ReceiveSample)(THIS_ void *pSampleData, int iSampleDataSize) PURE;
+        // ** IFrameReceiver methods ***
+        STDMETHOD(ReceiveFrame)(THIS_ void *pFrameData, int iFrameDataSize, LONGLONG frameDuration) PURE;
 
     END_INTERFACE
 }; 

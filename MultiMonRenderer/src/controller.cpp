@@ -68,7 +68,7 @@ HRESULT Controller::CreateGraphObjects()
         return false;
     }
 
-    hr = pPin->QueryInterface(__uuidof(ISampleReceiver), (void **)&m_pSampleReceiver);
+    hr = pPin->QueryInterface(__uuidof(IFrameReceiver), (void **)&m_pFrameReceiver);
     if (FAILED(hr))
     {
         printf("Can't find SampleReceiver interface\n");
@@ -258,8 +258,17 @@ bool Controller::SetMonitorIndex( int nMonitorIndex )
     return true;
 }
 
-bool Controller::DrawFrame(const void *pFrameData, int nFrameSize)
+bool Controller::DrawFrame(const void *pFrameData, int nFrameSize, REFERENCE_TIME frameDuration)
 {
-    HRESULT hr = m_pSampleReceiver->ReceiveSample((void *)pFrameData, nFrameSize);
+    HRESULT hr = m_pFrameReceiver->ReceiveFrame((void *)pFrameData, nFrameSize, frameDuration);
     return SUCCEEDED(hr);
+}
+
+void Controller::Stop()
+{
+    if (m_pControl)
+    {
+        m_pControl->Stop();
+    }
+
 }

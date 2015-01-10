@@ -37,7 +37,7 @@ private:
 //
 class GeneratorStream
     : public CSourceStream
-    , public ISampleReceiver
+    , public IFrameReceiver
 {
 
 public:
@@ -70,22 +70,21 @@ public:
     DECLARE_IUNKNOWN
     STDMETHODIMP NonDelegatingQueryInterface(REFIID riid, __deref_out void ** ppv);
 
-    // ISampleReceiver
-    STDMETHODIMP ReceiveSample(void *pSampleData, int iSampleDataSize);
+    // IFrameReceiver
+    STDMETHODIMP ReceiveFrame(void *pFrameData, int iFrameDataSize, REFERENCE_TIME frameDuration);
 
 private:
 
     int m_iImageHeight;                 // The current image height
     int m_iImageWidth;                  // And current image width
-    int m_iRepeatTime;                  // Time in msec between frames
-    const int m_iDefaultRepeatTime;     // Initial m_iRepeatTime
 
     CCritSec m_cSharedState;            // Lock on m_rtSampleTime and m_Ball
     CRefTime m_rtSampleTime;            // The time stamp for each sample
 
-    CAMEvent m_evSampleCopied;
-    void * m_pSampleData;
-    int m_iSampleDataSize;
+    CAMEvent m_evFrameCopied;
+    void * m_pFrameData;
+    int m_iFrameDataSize;
+    REFERENCE_TIME m_tFrameDuration;
 
 }; // GeneratorStream
     
