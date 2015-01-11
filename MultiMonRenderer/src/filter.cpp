@@ -4,47 +4,9 @@
 #include "common.h"
 #include "filter.h"
 
-#pragma warning(disable:4710)  // 'function': function not inlined (optimzation)
+static const int FILTER_BUFFER_COUNT = 1;
 
-// Setup data
-
-const AMOVIESETUP_MEDIATYPE sudOpPinTypes =
-{
-    &MEDIATYPE_Video,       // Major type
-    &MEDIASUBTYPE_NULL      // Minor type
-};
-
-const AMOVIESETUP_PIN sudOpPin =
-{
-    L"Output",              // Pin string name
-    FALSE,                  // Is it rendered
-    TRUE,                   // Is it an output
-    FALSE,                  // Can we have none
-    FALSE,                  // Can we have many
-    &CLSID_NULL,            // Connects to filter
-    NULL,                   // Connects to pin
-    1,                      // Number of types
-    &sudOpPinTypes };       // Pin details
-
-const AMOVIESETUP_FILTER sudBallax =
-{
-    &CLSID_GeneratorFilter,    // Filter CLSID
-    L"Picture Generator Filter", // String name
-    MERIT_DO_NOT_USE,       // Filter merit
-    1,                      // Number pins
-    &sudOpPin               // Pin details
-};
-
-
-// COM global table of objects in this dll
-
-CFactoryTemplate g_Templates[] = {
-  { L"Picture Generator Filter"
-  , &CLSID_GeneratorFilter
-  , GeneratorFilter::CreateInstance
-  , NULL
-  , &sudBallax }
-};
+CFactoryTemplate g_Templates[1] = {};
 int g_cTemplates = sizeof(g_Templates) / sizeof(g_Templates[0]);
 
 
@@ -277,13 +239,13 @@ HRESULT GeneratorStream::CheckMediaType(const CMediaType *pMediaType)
     }
 
     // Check if the image width & height have changed
-//     if(pvi->bmiHeader.biWidth != m_Generator->GetImageWidth() || 
-//        abs(pvi->bmiHeader.biHeight) != m_Generator->GetImageHeight())
-//     {
-//         // If the image width/height is changed, fail CheckMediaType() to force
-//         // the renderer to resize the image.
-//         return E_INVALIDARG;
-//     }
+    if(pvi->bmiHeader.biWidth != m_iImageWidth || 
+       abs(pvi->bmiHeader.biHeight) != m_iImageHeight)
+    {
+        // If the image width/height is changed, fail CheckMediaType() to force
+        // the renderer to resize the image.
+        return E_INVALIDARG;
+    }
 
 
     return S_OK;  // This format is acceptable.
@@ -308,7 +270,7 @@ HRESULT GeneratorStream::DecideBufferSize(IMemAllocator *pAlloc,
     HRESULT hr = NOERROR;
 
     VIDEOINFO *pvi = (VIDEOINFO *) m_mt.Format();
-    pProperties->cBuffers = 1;
+    pProperties->cBuffers = FILTER_BUFFER_COUNT;
     pProperties->cbBuffer = pvi->bmiHeader.biSizeImage;
 
     ASSERT(pProperties->cbBuffer);
@@ -331,11 +293,6 @@ HRESULT GeneratorStream::DecideBufferSize(IMemAllocator *pAlloc,
         return E_FAIL;
     }
 
-    // Make sure that we have only 1 buffer (we erase the ball in the
-    // old buffer to save having to zero a 200k+ buffer every time
-    // we draw a frame)
-
-    ASSERT(Actual.cBuffers == 1);
     return NOERROR;
 
 } // DecideBufferSize

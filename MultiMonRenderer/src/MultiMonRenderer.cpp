@@ -42,7 +42,7 @@ void MMR_API MMR_GetCards(MMR_HANDLE handle, char*** names, int *count)
     }
 }
 
-void MMR_API MMR_Start(MMR_HANDLE handle, int cardIndex, int width, int height)
+int MMR_API MMR_Start(MMR_HANDLE handle, int cardIndex, int width, int height)
 {
     MMR_CONTEXT *context = (MMR_CONTEXT *)handle;
     context->m_canvas.Initialize();
@@ -51,20 +51,22 @@ void MMR_API MMR_Start(MMR_HANDLE handle, int cardIndex, int width, int height)
     if (!context->m_controller.SetFrameDimensions(width, height))
     {
         printf("Invalid picture dimensions\n");
-        return;
+        return 0;
     }
 
     if (!context->m_controller.Start())
     {
         printf("Can't start DirectShow controller\n");
-        return;
+        return 0;
     }
+
+    return 1;
 }
 
-void MMR_API MMR_SendFrame(MMR_HANDLE handle, const char* buf, int bufSize, MMR_TIME frameDuration)
+int MMR_API MMR_SendFrame(MMR_HANDLE handle, const char* buf, int bufSize, MMR_TIME frameDuration)
 {
     MMR_CONTEXT *context = (MMR_CONTEXT *)handle;
-    context->m_controller.DrawFrame(buf, bufSize, frameDuration);
+    return context->m_controller.DrawFrame(buf, bufSize, frameDuration);
 }
 
 void MMR_API MMR_Stop(MMR_HANDLE handle)
