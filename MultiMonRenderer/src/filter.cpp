@@ -4,7 +4,7 @@
 #include "common.h"
 #include "filter.h"
 
-static const int FILTER_BUFFER_COUNT = 1;
+static const int FILTER_BUFFER_COUNT = 5;
 
 CFactoryTemplate g_Templates[1] = {};
 int g_cTemplates = sizeof(g_Templates) / sizeof(g_Templates[0]);
@@ -115,9 +115,11 @@ HRESULT GeneratorStream::FillBuffer(IMediaSample *pms)
         m_rtSampleTime += m_tFrameDuration;
 
         pms->SetTime((REFERENCE_TIME *) &rtStart,(REFERENCE_TIME *) &m_rtSampleTime);
+        LogMessage(_T("FillBuffer succeeded with sample [%d , %d]"), rtStart.Millisecs(), m_rtSampleTime.Millisecs());
     }
 
     pms->SetSyncPoint(TRUE);
+
     return NOERROR;
 
 } // FillBuffer
@@ -384,6 +386,7 @@ HRESULT GeneratorStream::DoBufferProcessingLoop(void)
 
             // Virtual function user will override.
             hr = FillBuffer(pSample);
+            m_pFrameData = NULL;
             m_evFrameCopied.Set();
 
             if (hr == S_OK)
@@ -451,6 +454,8 @@ GeneratorStream::NonDelegatingQueryInterface(REFIID riid, __deref_out void ** pp
 
 STDMETHODIMP GeneratorStream::ReceiveFrame(void *pFrameData, int iFrameDataSize, REFERENCE_TIME frameDuration)
 {
+    LogMessage(_T("ReceiveFrame is called with frameDuration = %d"), (LONG)frameDuration);
+
     HRESULT hr = E_FAIL;
     {
         CAutoLock cAutoLockShared(&m_cSharedState);
@@ -461,6 +466,7 @@ STDMETHODIMP GeneratorStream::ReceiveFrame(void *pFrameData, int iFrameDataSize,
     static const int FEEDBACK_WAIT_TIMEOUT = 3000; // 3 sec
     if (m_evFrameCopied.Wait(FEEDBACK_WAIT_TIMEOUT))
     {
+        LogMessage(_T("frame copied successfully"));
         // frame copied successfully
         hr = S_OK;
     }

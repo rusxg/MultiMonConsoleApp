@@ -71,6 +71,13 @@
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
     </Link>
+    <PostBuildEvent>
+      <Command>echo copy $(TargetPath)  $(SolutionDir)\..\..\bin\
+copy $(TargetPath)  $(SolutionDir)\..\..\bin\
+echo copy $(TargetDir)$(TargetName).pdb  $(SolutionDir)\..\..\bin\
+copy $(TargetDir)$(TargetName).pdb  $(SolutionDir)\..\..\bin\</Command>
+      <Message>Copying library binaries to solution folder</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -94,6 +101,13 @@
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
     </Link>
+    <PostBuildEvent>
+      <Command>echo copy $(TargetPath)  $(SolutionDir)\..\..\bin\
+copy $(TargetPath)  $(SolutionDir)\..\..\bin\
+echo copy $(TargetDir)$(TargetName).pdb  $(SolutionDir)\..\..\bin\
+copy $(TargetDir)$(TargetName).pdb  $(SolutionDir)\..\..\bin\</Command>
+      <Message>Copying library binaries to solution folder</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\canvas.cpp" />

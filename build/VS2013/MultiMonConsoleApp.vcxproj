@@ -76,17 +76,20 @@
       </Message>
     </PreBuildEvent>
     <CustomBuildStep>
-      <Command>copy  ..\..\MultiMonRenderer\bin\MultiMonRendererd.dll $(OutputPath)\MultiMonRendererd.dll
-copy  ..\..\MultiMonRenderer\bin\MultiMonRendererd.pdb $(OutputPath)\MultiMonRendererd.pdb</Command>
+      <Command>
+      </Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Message>Copying MultiMonRenderer DLL to output folder</Message>
+      <Message>
+      </Message>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Outputs>$(OutputPath)\MultiMonRendererd.dll;$(OutputPath)\MultiMonRendererd.pdb</Outputs>
+      <Outputs>
+      </Outputs>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Inputs>..\..\MultiMonRenderer\bin\MultiMonRendererd.dll;..\..\MultiMonRenderer\bin\MultiMonRendererd.pdb</Inputs>
+      <Inputs>
+      </Inputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -110,10 +113,12 @@ copy  ..\..\MultiMonRenderer\bin\MultiMonRendererd.pdb $(OutputPath)\MultiMonRen
       <AdditionalDependencies>..\..\MultiMonRenderer\bin\MultiMonRenderer.lib;Strmiids.lib;Quartz.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>copy ..\..\MultiMonRenderer\bin\MultiMonRenderer.dll  $(OutputPath)</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Copying MultiMonRenderer DLL to output folder</Message>
+      <Message>
+      </Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
