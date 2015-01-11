@@ -71,6 +71,9 @@ void MMR_API MMR_Stop(MMR_HANDLE handle)
 {
     MMR_CONTEXT *context = (MMR_CONTEXT *)handle;
     context->m_controller.Stop();
+    context->m_canvas.Uninitialize();
+    context->m_controller.SetCanvas(NULL);
+
 }
 
 void MMR_API MMR_Uninitialize(MMR_HANDLE handle)

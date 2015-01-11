@@ -1,6 +1,8 @@
 #include "common.h"
 #include "canvas.h"
 
+#define CANVAS_WINDOW_CLASS_NAME L"CanvasWindow"
+
 Canvas::Canvas()
     : m_pEventCallback(NULL)
     , m_pInputCallback(NULL)
@@ -22,7 +24,7 @@ bool Canvas::Initialize()
     wcx.hCursor = LoadCursor(NULL, IDC_ARROW);					// predefined arrow 
     wcx.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);	// white background brush 
     wcx.lpszMenuName = NULL;									// name of menu resource 
-    wcx.lpszClassName = L"CanvasWindow";							// name of window class 
+    wcx.lpszClassName = CANVAS_WINDOW_CLASS_NAME;							// name of window class 
     wcx.hIconSm = LoadIcon(NULL, IDI_APPLICATION);				// small class icon 
 
     RegisterClassExW(&wcx);
@@ -32,6 +34,13 @@ bool Canvas::Initialize()
         (void *)this);
 
     return true;
+}
+
+void Canvas::Uninitialize()
+{
+    DestroyWindow(m_hwnd);
+    m_hwnd = NULL;
+    UnregisterClassW(CANVAS_WINDOW_CLASS_NAME, 0);
 }
 
 LRESULT CALLBACK Canvas::stWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

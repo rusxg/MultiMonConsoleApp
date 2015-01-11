@@ -7,6 +7,7 @@ public:
     Canvas();
 
     bool Initialize();
+    void Uninitialize();
 
     // ICanvas
     bool SetPosition(const RECT& rcMonitor);
